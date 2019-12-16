@@ -4,9 +4,9 @@ class ActionType(Enum):
     bet = 3
 
 class Action:
-    def __init__(self, player_id, actionType, amount=0):
+    def __init__(self, player_id, type, amount=0):
         self.player_id = player_id
-        self.actionType = actionType
+        self.type = type
         self.amount = amount
 
     def __str__(self):
