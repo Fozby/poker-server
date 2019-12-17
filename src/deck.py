@@ -1,4 +1,4 @@
-from enum import Enum
+from enum import Enum, IntEnum
 
 class OrderedEnum(Enum):
     def __ge__(self, other):
@@ -18,7 +18,7 @@ class OrderedEnum(Enum):
             return self.value < other.value
         return NotImplemented
 
-class CardValue(OrderedEnum):
+class CardValue(IntEnum):
     Ace = 1
     Deuce = 2
     Three = 3
@@ -32,6 +32,7 @@ class CardValue(OrderedEnum):
     Jack = 11
     Queen = 12
     King = 13
+    High_ace = 14
 
 
 class CardSuit(Enum):
@@ -40,7 +41,7 @@ class CardSuit(Enum):
     Diamond = 3
     Spade = 4
 
-class HandRankings(OrderedEnum):
+class HandRankings(IntEnum):
     High_card = 1
     Pair = 2
     Two_pair = 3

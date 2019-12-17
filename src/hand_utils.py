@@ -1,7 +1,5 @@
 from deck import Deck, CardValue, CardSuit, Card
 
-
-
 def computeWinner():
     deck = Deck()
     print(deck)
@@ -10,6 +8,12 @@ def computeWinner():
 
 # Returns a score associated with the hand type
 def isStraightFlush(sortedCards):
+    # Check for potential royal and swap sorted position
+    if sortedCards[0].value is CardValue.Ace and sortedCards[1].value is CardValue.Ten:
+        tmp = sortedCards[0]
+        sortedCards = sortedCards[1:]
+        sortedCards.append(Card(CardValue.High_ace, tmp.suit))
+
     initialValue = sortedCards[0].value
     desired_suit = sortedCards[0].suit
     straight_flush_value = initialValue
@@ -19,6 +23,7 @@ def isStraightFlush(sortedCards):
 
         initialValue += 1
         straight_flush_value += card.value
+
     return straight_flush_value
 
 def isFlush(sortedCards):
@@ -35,6 +40,8 @@ def determineBestHand(playableCards):
 
     pass
 
+def sortCards(cards):
+    return sorted([c for c in cards])
 
 if __name__ == '__main__':
     computeWinner()

@@ -64,7 +64,7 @@ class Game:
 		return
 
 
-	# 
+	#
 	def validate_action(self, action):
 		print("Validating action {}", action)
 		return
@@ -131,4 +131,4 @@ class Action:
         return """
             \tActionType = {}
             \tAmount = {}
-        """.format(self.actionType, self.amount)		
+        """.format(self.actionType, self.amount)
