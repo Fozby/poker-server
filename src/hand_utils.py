@@ -26,7 +26,63 @@ def isStraightFlush(sortedCards):
 
     return straight_flush_value
 
+def createCountDict(sortedCards):
+    countDict = {}
+
+    for card in sortedCards:
+        if card.value not in countDict:
+            countDict[card.value] = 1
+        else:
+            countDict[card.value] += 1
+
+    return countDict
+
+def isQuads(sortedCards, countDict):
+    if (len(countDict) is not 2):
+        return -1
+
+    keys = list(countDict.keys())
+    # only need to check for the complement
+    if not countDict[keys[0]] == 1 and not countDict[keys[1]] == 1:
+        return -1
+
+    if countDict[keys[0]] == 1:
+        quad_value = keys[0].value
+        kicker = keys[1].value
+    else:
+        quad_value = keys[1].value
+        kicker = keys[0].value
+
+    return 100 * quad_value + kicker
+
+def isFullHouse(sortedCards, countDict):
+    if (len(countDict) is not 2):
+        return -1
+
+    keys = list(countDict.keys())
+
+    # only need to check for the complement
+    if not countDict[keys[0]] == 2 and not countDict[keys[1]] == 2:
+        return -1
+    if countDict[keys[0]] == 3:
+        boat_value = keys[0].value
+        kicker = keys[1].value
+    else:
+        boat_value = keys[1].value
+        kicker = keys[0].value
+
+    return 100 * boat_value + kicker
+
 def isFlush(sortedCards):
+    pass
+
+def isStraight(sortedCards):
+    pass
+
+def isTwoPair(sortedCards):
+    pass
+
+def isHighCard(sortedCards):
     pass
 
 # Takes in 5 card hand as input
@@ -41,7 +97,7 @@ def determineBestHand(playableCards):
     pass
 
 def sortCards(cards):
-    return sorted([c for c in cards])
+    return sorted(cards, key=lambda x: x.value)
 
 if __name__ == '__main__':
     computeWinner()

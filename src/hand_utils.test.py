@@ -1,7 +1,7 @@
 import unittest
 
 from deck import Deck, Card, CardValue, CardSuit
-from hand_utils import isStraightFlush, sortCards
+from hand_utils import isStraightFlush, sortCards, isQuads, isFullHouse,  createCountDict
 
 class TestHandUtils(unittest.TestCase):
 
@@ -37,7 +37,7 @@ class TestHandUtils(unittest.TestCase):
                 Card(CardValue.Ten, CardSuit.Club)
                 ]
 
-        invalid_result = isStraightFlush(invalid_set)
+        invalid_result = isStraightFlush(sortCards(invalid_set))
         self.assertEqual(invalid_result, -1)
 
         royal = isStraightFlush(sortCards(royal_set))
@@ -46,6 +46,82 @@ class TestHandUtils(unittest.TestCase):
 
         self.assertGreater(second_nut_flush, wheel_flush)
         self.assertGreater(royal, second_nut_flush)
+
+    def test_quads(self):
+        invalid_set = [
+                Card(CardValue.Ace, CardSuit.Club),
+                Card(CardValue.Ace, CardSuit.Spade),
+                Card(CardValue.Ace, CardSuit.Heart),
+                Card(CardValue.King, CardSuit.Diamond),
+                Card(CardValue.Five, CardSuit.Club)
+                ]
+
+        valid_set = [
+                Card(CardValue.Ace, CardSuit.Club),
+                Card(CardValue.Ace, CardSuit.Spade),
+                Card(CardValue.Ace, CardSuit.Heart),
+                Card(CardValue.Ace, CardSuit.Diamond),
+                Card(CardValue.Five, CardSuit.Club)
+                ]
+
+        valid_set_nuts = [
+                Card(CardValue.Ace, CardSuit.Club),
+                Card(CardValue.Ace, CardSuit.Spade),
+                Card(CardValue.Ace, CardSuit.Heart),
+                Card(CardValue.Ace, CardSuit.Diamond),
+                Card(CardValue.King, CardSuit.Club)
+                ]
+        valid_set_result = isQuads(sortCards(valid_set), createCountDict(valid_set))
+
+        self.assertGreater(valid_set_result, 0)
+
+        invalid_result = isQuads(sortCards(invalid_set), createCountDict(invalid_set))
+
+        self.assertEqual(invalid_result, -1)
+
+
+        valid_set_nuts_result = isQuads(sortCards(valid_set_nuts), createCountDict(valid_set_nuts))
+
+
+        self.assertGreater(valid_set_nuts_result, valid_set_result)
+
+    def test_full_house(self):
+        invalid_set = [
+                Card(CardValue.Ace, CardSuit.Club),
+                Card(CardValue.Ace, CardSuit.Spade),
+                Card(CardValue.Ace, CardSuit.Heart),
+                Card(CardValue.King, CardSuit.Diamond),
+                Card(CardValue.Five, CardSuit.Club)
+                ]
+
+        valid_set = [
+                Card(CardValue.Ace, CardSuit.Club),
+                Card(CardValue.Ace, CardSuit.Spade),
+                Card(CardValue.Ace, CardSuit.Heart),
+                Card(CardValue.Five, CardSuit.Diamond),
+                Card(CardValue.Five, CardSuit.Club)
+                ]
+
+        valid_set_nuts = [
+                Card(CardValue.Ace, CardSuit.Club),
+                Card(CardValue.Ace, CardSuit.Spade),
+                Card(CardValue.Ace, CardSuit.Heart),
+                Card(CardValue.King, CardSuit.Diamond),
+                Card(CardValue.King, CardSuit.Club)
+                ]
+        valid_set_result = isFullHouse(sortCards(valid_set), createCountDict(valid_set))
+
+        self.assertGreater(valid_set_result, 0)
+
+        invalid_result = isFullHouse(sortCards(invalid_set), createCountDict(invalid_set))
+
+        self.assertEqual(invalid_result, -1)
+
+
+        valid_set_nuts_result = isFullHouse(sortCards(valid_set_nuts), createCountDict(valid_set_nuts))
+
+
+        self.assertGreater(valid_set_nuts_result, valid_set_result)
 
     def test_isupper(self):
         self.assertTrue('FOO'.isupper())
