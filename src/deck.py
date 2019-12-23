@@ -19,7 +19,7 @@ class OrderedEnum(Enum):
         return NotImplemented
 
 class CardValue(IntEnum):
-    Ace = 1
+    Low_ace = 1
     Deuce = 2
     Three = 3
     Four = 4
@@ -32,7 +32,7 @@ class CardValue(IntEnum):
     Jack = 11
     Queen = 12
     King = 13
-    High_ace = 14
+    Ace = 14
 
 
 class CardSuit(Enum):

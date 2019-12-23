@@ -1,7 +1,7 @@
-from deck import Deck, CardValue, CardSuit, Card
+from deck import Deck, CardValue, CardSuit, Card, HandRankings
 import math
 
-
+# -1 0 1
 def computeWinner():
     deck = Deck()
     print(deck)
@@ -135,6 +135,28 @@ def isTwoPair(sortedCards):
 
     return two_pair_value + kicker
 
+def isPair(sortedCards):
+    countDict = createCountDict(sortedCards)
+    if (len(countDict) is not 4):
+        return -1
+
+    keys = list(countDict.keys())
+
+    pair = 0
+    kickers = []
+
+    for key in keys:
+        if countDict[key] == 2:
+            pair = key.value
+        else:
+            kickers.append(key)
+
+    kicker_value = 0
+    for kicker in kickers:
+        kicker_value += computeValue(kicker)
+
+    return kicker_value + pair
+
 def isHighCard(sortedCards):
     countDict = createCountDict(sortedCards)
     if (len(countDict) is not 5):
@@ -158,15 +180,14 @@ def createCountDict(sortedCards):
     return countDict
 
 def swapPotentialStraightAce(sortedCards):
-    if sortedCards[0].value is CardValue.Ace and sortedCards[1].value is CardValue.Ten:
-        tmp = sortedCards[0]
-        sortedCards = sortedCards[1:]
-        sortedCards.append(Card(CardValue.High_ace, tmp.suit))
+
+    if sortedCards[4].value is CardValue.Ace and sortedCards[3].value is CardValue.Four:
+        newSet = [Card.Low_ace]
+        newSet[1:] = sortedCards[0:4]
+        return newSet
     return sortedCards
 
 def computeValue(card):
-    if card.value is CardValue.Ace:
-        return 2 ** CardValue.High_ace
     return 2 ** card.value
 
 # Takes in 5 card hand as input
@@ -183,17 +204,41 @@ def determineBestHand(playableCards):
 def sortCards(cards):
     return sorted(cards, key=lambda x: x.value)
 
+def computeCardValue(cards):
+
+    sortedCards = sortCards(cards)
+
+    handRanks = [
+            (HandRankings.Straight_flush, isStraightFlush),
+            (HandRankings.Quads, isQuads),
+            (HandRankings.Full_house, isFullHouse),
+            (HandRankings.Flush, isFlush),
+            (HandRankings.Straight, isStraight),
+            (HandRankings.Trips, isTrips),
+            (HandRankings.Two_pair, isTwoPair),
+            (HandRankings.Pair, isPair),
+            (HandRankings.High_card, isHighCard)
+            ]
+
+    for tuple in handRanks:
+        value = tuple[1](sortedCards)
+
+        if value > -1:
+            return (tuple[0], value)
+
+    raise Exception
+
 if __name__ == '__main__':
     computeWinner()
 
     flush_board = []
 
     straight_board = [
-            Card(CardValue.Ace, CardSuit.Club),
+            Card(CardValue.King, CardSuit.Club),
             Card(CardValue.King, CardSuit.Heart),
-            Card(CardValue.Queen, CardSuit.Diamond),
-            Card(CardValue.Jack, CardSuit.Spade),
-            Card(CardValue.Ten, CardSuit.Spade),
+            Card(CardValue.King, CardSuit.Diamond),
+            Card(CardValue.Ace, CardSuit.Spade),
+            Card(CardValue.Ace, CardSuit.Spade),
             ]
-    determineBestHand(straight_board)
+    print(computeCardValue(straight_board))
     pass
